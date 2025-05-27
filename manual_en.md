@@ -100,6 +100,4 @@ Check:
 - One key can be used for multiple files, but using different keys for different files is more secure
 - The `.enc` extension is added automatically during encryption
 
----
 
-For additional assistance, please contact support.
