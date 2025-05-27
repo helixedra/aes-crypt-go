@@ -3,90 +3,71 @@ package main
 import (
 	"bufio"
 	"crypto/rand"
-	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"os"
 	"strings"
-
-	"github.com/skip2/go-qrcode"
-)
-
-const (
-	randomSeedLength = 32
-	keyLength        = 32
-	baseName         = "secret"
-	qrPrefixURL      = "https://mycode.com?qr="
 )
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
-	// flag to generate QR
-	autoQR := len(os.Args) > 1 && os.Args[1] == "--qr"
+	fmt.Println("--------------------")
+	fmt.Println("Key Generator v0.1.1")
+	fmt.Println("--------------------")
 
-	// generate random key
-	seed := make([]byte, randomSeedLength)
-	_, err := rand.Read(seed)
+	// Generate key
+	key := make([]byte, 32)
+	_, err := rand.Read(key)
 	if err != nil {
-		fmt.Println("Error generating seed:", err)
+		fmt.Println("Error generating key:", err)
 		return
 	}
 
-	// encode to Base64
-	keyB64 := base64.StdEncoding.EncodeToString(seed)
+	// Choose output format
+	fmt.Print("\nChoose output format:\n1) .key file\n2) Base64\n3) Both\n\nYour choice (1-3): ")
+	choice, _ := reader.ReadString('\n')
+	choice = strings.TrimSpace(choice)
 
-	// ask for output key name
-	fmt.Print("Enter filename for key: ")
-	var keyName string
-	keyName, _ = reader.ReadString('\n')
-	keyName = sanitize(keyName)
-	if keyName == "" {
-		keyName = baseName
+	switch choice {
+	case "1":
+		saveKeyFile(key)
+	case "2":
+		showBase64(key)
+	case "3":
+		saveKeyFile(key)
+		showBase64(key)
+	default:
+		fmt.Println("Error: Invalid choice")
+	}
+	fmt.Println("\nPress Enter to exit...")
+	reader.ReadString('\n')
+}
+
+func saveKeyFile(key []byte) {
+	fmt.Print("\nEnter filename (default: secret.key): ")
+	filename, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+	filename = strings.TrimSpace(filename)
+
+	if filename == "" {
+		filename = "secret.key"
 	}
 
-	// Get SHA-256 from seed
-	finalKey := sha256.Sum256(seed)
-	keyBytes := finalKey[:]
+	if !strings.HasSuffix(filename, ".key") {
+		filename += ".key"
+	}
 
-	// Save binary key to file
-	keyFile := keyName + ".key"
-	err = os.WriteFile(keyFile, keyBytes, 0644)
+	err := os.WriteFile(filename, key, 0600)
 	if err != nil {
-		fmt.Println("Error saving key:", err)
+		fmt.Println("Error saving file:", err)
 		return
 	}
 
-
-	// generate QR code by flag or question
-	if autoQR || askYesNo("Create QR code with link? [y/n]: ", reader) {
-		qrContent := qrPrefixURL + keyB64
-		qrFile := keyName + ".png"
-		err := qrcode.WriteFile(qrContent, qrcode.Medium, 256, qrFile)
-		if err != nil {
-			fmt.Println("Error generating QR code:", err)
-			return
-		}
-		fmt.Println("QR code saved to file:", qrFile)
-	}
-
-	fmt.Println("Key saved to file:", keyFile)
-fmt.Println("")
-fmt.Println("Key*:", keyB64)
-fmt.Println("\n*you can use this key to decrypt files as passphrase or \ngenerate .key file by online key generator")
-fmt.Println("")
-fmt.Println("Press Enter to exit...")
-fmt.Scanln()
+	fmt.Printf("Key saved to %s\n", filename)
 }
 
-func sanitize(s string) string {
-	return strings.TrimSpace(s)
-}
-
-func askYesNo(prompt string, reader *bufio.Reader) bool {
-	fmt.Print(prompt)
-	var response string
-	response, _ = reader.ReadString('\n')
-	response = sanitize(strings.ToLower(response))
-	return response == "y" || response == "yes"
+func showBase64(key []byte) {
+	keyB64 := base64.StdEncoding.EncodeToString(key)
+	fmt.Printf("\nBase64 key: %s\n", keyB64)
+	fmt.Println("\nKeep this key secret! Copy it to a secure place.\nNow you can run Cryptor and use this key to encrypt/decrypt files.")
 }

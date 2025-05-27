@@ -1,0 +1,53 @@
+AES File Cryptor - Quick Start Guide
+===================================
+
+1. INSTALLATION
+--------------
+- Install Go 1.16 or higher
+- Build the tools:
+  go build keygen.go
+  go build cryptor.go
+
+2. GENERATE A KEY
+----------------
+Run: ./keygen
+
+Choose:
+1) Save as .key file (recommended)
+   - Enter filename or press Enter for default (secret.key)
+   - Keep this file safe!
+
+2) Show Base64 key
+   - Copy and save the key securely
+   - Use for manual key entry
+
+3. ENCRYPT A FILE
+----------------
+Run: ./cryptor
+
+1) Choose 1 (Encrypt)
+2) Enter file path to encrypt
+3) Choose key source:
+   1) .key file - enter key file path
+   2) Base64 - paste your key
+4) Encrypted file saved as [filename].enc
+
+4. DECRYPT A FILE
+----------------
+Run: ./cryptor
+
+1) Choose 2 (Decrypt)
+2) Enter path to .enc file
+3) Provide the key (file or Base64)
+4) Decrypted file saved with original name
+
+IMPORTANT NOTES:
+- Keep your keys safe! Losing them means losing access to your files
+- The program will overwrite existing files without warning
+- For security, use different keys for different files
+- Encrypted files have .enc extension
+
+TROUBLESHOOTING:
+- Invalid key? Make sure it's 32 bytes (44 Base64 chars)
+- File not found? Check the path and permissions
+- Decryption failed? Verify the key and file integrity
