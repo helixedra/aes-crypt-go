@@ -18,10 +18,12 @@ const nonceSize = 12 // GCM standard
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
+	fmt.Println("AES Crypt v0.1")
+	fmt.Println("------------------------------------")
 	fmt.Println("Select mode:")
 	fmt.Println("[1] Encrypt file")
 	fmt.Println("[2] Decrypt file")
-	fmt.Print("Choice: ")
+	fmt.Print("Type 1 or 2: ")
 	mode, _ := reader.ReadString('\n')
 	mode = sanitize(mode)
 	if mode != "1" && mode != "2" {
@@ -45,7 +47,7 @@ func main() {
 	fmt.Println("Select key source:")
 	fmt.Println("[1] Enter passphrase")
 	fmt.Println("[2] Use key file (.key)")
-	fmt.Print("Choice: ")
+	fmt.Print("Type 1 or 2: ")
 	keyMode, _ := reader.ReadString('\n')
 	keyMode = sanitize(keyMode)
 
@@ -118,6 +120,8 @@ func main() {
 	if saveKey == "y" {
 		fmt.Println("Key saved to:", inputPath+".key")
 	}
+	fmt.Println("Press Enter to exit...")
+	fmt.Scanln()
 }
 
 func sanitize(s string) string {
