@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>AES Cryptor - Руководство пользователя</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            margin: 0 auto;
+            width: 800px;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 { color: #2c3e50; }
+        h2 { 
+            color: #3498db;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 { color: #2980b9; }
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #c7254e;
+            display: block;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .toc {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .toc ul {
+            padding-left: 20px;
+        }
+        .note {
+            background-color: #e7f4ff;
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .warning {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="manual_en.html">English version</a>
+    <h1>Руководство пользователя: Key Generator и File Cryptor</h1>
+
+    <div class="toc">
+        <h2>Содержание</h2>
+        <ol>
+            <li><a href="#введение">Введение</a></li>
+            <li><a href="#установка">Установка</a></li>
+            <li><a href="#генерация-ключа">Генерация ключа</a>
+                <ul>
+                    <li><a href="#сохранение-в-файл">Сохранение в файл</a></li>
+                    <li><a href="#отображение-в-base64">Отображение в Base64</a></li>
+                </ul>
+            </li>
+            <li><a href="#шифрование-файлов">Шифрование файлов</a></li>
+            <li><a href="#расшифровка-файлов">Расшифровка файлов</a></li>
+            <li><a href="#безопасность">Безопасность</a></li>
+            <li><a href="#устранение-неполадок">Устранение неполадок</a></li>
+        </ol>
+    </div>
+
+    <h2 id="введение">Введение</h2>
+    <p>Key Generator и File Cryptor - это набор утилит для безопасного шифрования и дешифрования файлов с использованием алгоритма AES-256.</p>
+
+    <h2 id="установка">Установка</h2>
+    <ol>
+        <li>Убедитесь, что у вас установлен Go (версии 1.16 или выше)</li>
+        <li>Клонируйте репозиторий или скопируйте файлы</li>
+        <li>Соберите исполняемые файлы:
+            <pre><code>go build keygen.go
+go build cryptor.go</code></pre>
+        </li>
+    </ol>
+
+    <h2 id="генерация-ключа">Генерация ключа</h2>
+    <p>Запустите программу <code>keygen</code>:</p>
+    <pre><code>./keygen</code></pre>
+
+    <h3 id="сохранение-в-файл">Сохранение в файл</h3>
+    <ol>
+        <li>Выберите опцию <code>1) .key file</code></li>
+        <li>Введите имя файла (по умолчанию: <code>secret.key</code>)</li>
+        <li>Ключ будет сохранен в указанный файл</li>
+    </ol>
+
+    <h3 id="отображение-в-base64">Отображение в Base64</h3>
+    <ol>
+        <li>Выберите опцию <code>2) Base64</code></li>
+        <li>Ключ будет отображен в консоли в формате Base64</li>
+        <li>Скопируйте и сохраните этот ключ в безопасном месте</li>
+    </ol>
+
+    <h2 id="шифрование-файлов">Шифрование файлов</h2>
+    <ol>
+        <li>Запустите <code>cryptor</code></li>
+        <li>Выберите <code>1) Encrypt</code></li>
+        <li>Введите путь к файлу для шифрования</li>
+        <li>Выберите источник ключа:
+            <ul>
+                <li><code>1) .key file</code> - укажите путь к файлу с ключом</li>
+                <li><code>2) Base64 key</code> - вставьте ключ в формате Base64</li>
+            </ul>
+        </li>
+        <li>Зашифрованный файл будет сохранен с расширением <code>.enc</code></li>
+    </ol>
+
+    <h2 id="расшифровка-файлов">Расшифровка файлов</h2>
+    <ol>
+        <li>Запустите <code>cryptor</code></li>
+        <li>Выберите <code>2) Decrypt</code></li>
+        <li>Введите путь к зашифрованному файлу (с расширением <code>.enc</code>)</li>
+        <li>Укажите ключ (из файла или введите в Base64)</li>
+        <li>Расшифрованный файл будет сохранен с оригинальным именем (без <code>.enc</code>)</li>
+    </ol>
+
+    <h2 id="безопасность">Безопасность</h2>
+    <div class="note">
+        <ul>
+            <li>Всегда храните ключи в безопасном месте</li>
+            <li>Никогда не передавайте ключи по незащищенным каналам</li>
+            <li>Рекомендуется использовать <code>.key</code> файлы вместо Base64, так как они не остаются в истории командной строки</li>
+            <li>Храните резервные копии ваших ключей шифрования</li>
+            <li>Потеря ключа означает потерю доступа к зашифрованным данным</li>
+        </ul>
+    </div>
+
+    <h2 id="устранение-неполадок">Устранение неполадок</h2>
+    
+    <h3>Ошибка "Invalid key length"</h3>
+    <p>Убедитесь, что:</p>
+    <ul>
+        <li>Файл ключа содержит ровно 32 байта</li>
+        <li>Ключ в формате Base64 корректно закодирован и соответствует 32 байтам после декодирования</li>
+    </ul>
+
+    <h3>Ошибка чтения файла</h3>
+    <p>Проверьте:</p>
+    <ul>
+        <li>Существует ли указанный файл</li>
+        <li>Имеются ли у вас права на чтение/запись</li>
+        <li>Корректный ли указан путь к файлу</li>
+    </ul>
+
+    <h3>Ошибка при расшифровке</h3>
+    <ul>
+        <li>Убедитесь, что используется тот же ключ, который использовался при шифровании</li>
+        <li>Проверьте, не поврежден ли зашифрованный файл</li>
+    </ul>
+
+    <h3>Общие рекомендации</h3>
+    <div class="warning">
+        <ul>
+            <li>Программа перезаписывает файлы без предупреждения</li>
+            <li>Один ключ можно использовать для нескольких файлов, но использование разных ключей для разных файлов безопаснее</li>
+            <li>Расширение <code>.enc</code> добавляется автоматически при шифровании</li>
+        </ul>
+    </div>
+
+    <hr>
+    <p>&copy; 2025 AES Cryptor | v0.1.1 | <a href="https://github.com/helixedra/aes-crypt-go">GitHub</a></p>
+</body>
+</html>

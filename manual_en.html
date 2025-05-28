@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>AES Cryptor - User Manual</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            margin: 0 auto;
+            width: 800px;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 { color: #2c3e50; }
+        h2 { 
+            color: #3498db;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 { color: #2980b9; }
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #c7254e;
+            display: block;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .toc {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .toc ul {
+            padding-left: 20px;
+        }
+        .note {
+            background-color: #e7f4ff;
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .warning {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="manual_ru.html">Русская версия</a>
+    <h1>User Manual: Key Generator and File Cryptor</h1>
+
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ol>
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#installation">Installation</a></li>
+            <li><a href="#key-generation">Key Generation</a>
+                <ul>
+                    <li><a href="#saving-to-a-file">Saving to a File</a></li>
+                    <li><a href="#displaying-as-base64">Displaying as Base64</a></li>
+                </ul>
+            </li>
+            <li><a href="#file-encryption">File Encryption</a></li>
+            <li><a href="#file-decryption">File Decryption</a></li>
+            <li><a href="#security">Security</a></li>
+            <li><a href="#troubleshooting">Troubleshooting</a></li>
+        </ol>
+    </div>
+
+    <h2 id="introduction">Introduction</h2>
+    <p>Key Generator and File Cryptor are utilities for secure file encryption and decryption using the AES-256 algorithm.</p>
+
+    <h2 id="installation">Installation</h2>
+    <ol>
+        <li>Ensure you have Go (version 1.16 or higher) installed</li>
+        <li>Clone the repository or copy the files</li>
+        <li>Build the executable files:
+            <pre><code>go build keygen.go
+go build cryptor.go</code></pre>
+        </li>
+    </ol>
+
+    <h2 id="key-generation">Key Generation</h2>
+    <p>Run the <code>keygen</code> program:</p>
+    <pre><code>./keygen</code></pre>
+
+    <h3 id="saving-to-a-file">Saving to a File</h3>
+    <ol>
+        <li>Select option <code>1) .key file</code></li>
+        <li>Enter a filename (default: <code>secret.key</code>)</li>
+        <li>The key will be saved to the specified file</li>
+    </ol>
+
+    <h3 id="displaying-as-base64">Displaying as Base64</h3>
+    <ol>
+        <li>Select option <code>2) Base64</code></li>
+        <li>The key will be displayed in the console in Base64 format</li>
+        <li>Copy and save this key in a secure location</li>
+    </ol>
+
+    <h2 id="file-encryption">File Encryption</h2>
+    <ol>
+        <li>Run <code>cryptor</code></li>
+        <li>Select <code>1) Encrypt</code></li>
+        <li>Enter the path to the file you want to encrypt</li>
+        <li>Choose the key source:
+            <ul>
+                <li><code>1) .key file</code> - specify the path to the key file</li>
+                <li><code>2) Base64 key</code> - paste the key in Base64 format</li>
+            </ul>
+        </li>
+        <li>The encrypted file will be saved with a <code>.enc</code> extension</li>
+    </ol>
+
+    <h2 id="file-decryption">File Decryption</h2>
+    <ol>
+        <li>Run <code>cryptor</code></li>
+        <li>Select <code>2) Decrypt</code></li>
+        <li>Enter the path to the encrypted file (with <code>.enc</code> extension)</li>
+        <li>Provide the key (from file or enter as Base64)</li>
+        <li>The decrypted file will be saved with the original filename (without <code>.enc</code>)</li>
+    </ol>
+
+    <h2 id="security">Security</h2>
+    <div class="note">
+        <ul>
+            <li>Always store your keys in a secure location</li>
+            <li>Never transmit keys over unsecured channels</li>
+            <li>It's recommended to use <code>.key</code> files instead of Base64, as they don't remain in command line history</li>
+            <li>Keep backup copies of your encryption keys</li>
+            <li>Losing the key means losing access to your encrypted data</li>
+        </ul>
+    </div>
+
+    <h2 id="troubleshooting">Troubleshooting</h2>
+    
+    <h3>"Invalid key length" Error</h3>
+    <p>Make sure that:</p>
+    <ul>
+        <li>The key file contains exactly 32 bytes</li>
+        <li>The Base64 key is properly encoded and decodes to 32 bytes</li>
+    </ul>
+
+    <h3>File Read Error</h3>
+    <p>Check:</p>
+    <ul>
+        <li>If the specified file exists</li>
+        <li>If you have read/write permissions</li>
+        <li>If the file path is correct</li>
+    </ul>
+
+    <h3>Decryption Error</h3>
+    <ul>
+        <li>Ensure you're using the same key that was used for encryption</li>
+        <li>Check if the encrypted file is not corrupted</li>
+    </ul>
+
+    <h3>General Tips</h3>
+    <div class="warning">
+        <ul>
+            <li>The program will overwrite files without warning</li>
+            <li>One key can be used for multiple files, but using different keys for different files is more secure</li>
+            <li>The <code>.enc</code> extension is added automatically during encryption</li>
+        </ul>
+    </div>
+
+    <hr>
+    <p>&copy; 2025 AES Cryptor | v0.1.1 | <a href="https://github.com/helixedra/aes-crypt-go">GitHub</a></p>
+</body>
+</html>
